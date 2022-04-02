@@ -1,0 +1,52 @@
+{
+  "name": "chunk-file-upload",
+  "version": "0.0.2",
+  "description": "big file chunk and upload,you can custom request ",
+  "keywords": [
+    "分片上传",
+    "断点续传",
+    "切片上传",
+    "文件上传",
+    "自定义请求"
+  ],
+  "private": false,
+  "main": "dist/bundle.cjs.js",
+  "module": "dist/bundle.esm.js",
+  "browser": "dist/bundle.browser.js",
+  "author": "peoren",
+  "homepage": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "dependencies": {
+    "core-js": "^2.6.10",
+    "rollup-plugin-uglify": "^6.0.4",
+    "spark-md5": "^3.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/preset-env": "^7.6.3",
+    "eslint": "^6.5.1",
+    "rollup": "^1.20.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-eslint": "^7.0.0",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-node-resolve": "^5.1.0",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-serve": "^1.1.0",
+    "rollup-plugin-terser": "^5.1.2"
+  },
+  "scripts": {
+    "build": "rollup -c rollup.config.build.js",
+    "dev": "rollup -c rollup.config.dev.js -w",
+    "test": "node test/test.js",
+    "pretest": "npm run build"
+  },
+  "files": [
+    "dist"
+  ]
+}
