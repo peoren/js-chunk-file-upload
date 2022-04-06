@@ -1,5 +1,5 @@
 {
-  "name": "chunk-file-upload",
+  "name": "js-chunk-file-upload",
   "version": "0.0.2",
   "description": "big file chunk and upload,you can custom request ",
   "keywords": [
@@ -18,7 +18,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/peoren/chunk-file-upload.git"
   },
   "dependencies": {
     "core-js": "^2.6.10",
