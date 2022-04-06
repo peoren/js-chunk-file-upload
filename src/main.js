@@ -1,5 +1,5 @@
 
-import {  checkSize, checkMode, calculateHash } from './until';
+import { checkSize, checkMode, calculateHash } from './until';
 export default class ChunkUploadFile {
     // 初始化传入size,mode
     constructor({ size, mode } = {}) {
@@ -37,20 +37,18 @@ export default class ChunkUploadFile {
         })
     }
     // 切片上传文件
-    async sendFile({ customReq, fileId, savedChunkIds }) {
+    async sendFile({ customReq, savedChunkIds }) {
 
         if (customReq) {
             this.customReq = customReq
         }
         // 去除已经存在的
-        if (fileId && savedChunkIds && savedChunkIds.length > 0) {
-            if (this.fileId === fileId) {
-                savedChunkIds.map(i => {
-                    if (!(this.sucIds[i]===undefined||this.sucIds[i]===null)) {
-                        this.sucIds[i] = i
-                    }
-                })
-            }
+        if (savedChunkIds && savedChunkIds.length > 0) {
+            savedChunkIds.map(i => {
+                if (!(this.sucIds[i] === undefined || this.sucIds[i] === null)) {
+                    this.sucIds[i] = i
+                }
+            })
         }
         this.uploadChunks(this.fileChunkList, this.customReq)
     }
@@ -100,7 +98,7 @@ export default class ChunkUploadFile {
             const next = () => {
                 that.sucIds[_data.chunkId] = _data.chunkId
                 let sucLen = Object.keys(that.sucIds).length
-                
+
                 let precent = (sucLen / that.chunkLength).toFixed(3)
                 that.onUpload(precent, _data.chunkId)
                 // 回收_data
@@ -118,7 +116,7 @@ export default class ChunkUploadFile {
             if (this.mode === 'serial') {
                 for (let index = 0; index < fileList.length; index++) {
                     const file = fileList[index];
-                    if (!(this.sucIds[file.chunkId]===undefined||this.sucIds[file.chunkId]===null)) {
+                    if (!(this.sucIds[file.chunkId] === undefined || this.sucIds[file.chunkId] === null)) {
                         continue
                     }
                     if (this.paused) {
@@ -131,7 +129,7 @@ export default class ChunkUploadFile {
             } else {
                 const reqList = []
                 fileList.map((file) => {
-                    if (this.sucIds[file.chunkId]===undefined||this.sucIds[file.chunkId]===null) {
+                    if (this.sucIds[file.chunkId] === undefined || this.sucIds[file.chunkId] === null) {
                         reqList.push(
                             this._packReq(file.chunkId, file, customReq)
                         )
