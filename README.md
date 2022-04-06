@@ -15,12 +15,9 @@
 ## 用法
 
 ```
-$ npm install file-chunk
+$ npm i js-chunk-file-upload
 ```
 
-```
-$ yarn add file-chunk
-```
 ```js   
         // 最好是一个文件创建一个实例,初始化时定义大小和模式
         const cuf = new ChunkUploadFile({
