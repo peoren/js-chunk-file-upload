@@ -1,6 +1,6 @@
 {
   "name": "js-chunk-file-upload",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "big file chunk and upload,you can custom request ",
   "keywords": [
     "分片上传",
