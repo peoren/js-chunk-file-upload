@@ -184,9 +184,9 @@ export default class ChunkUploadFile {
     onFileReadEnd(file, fileId) {
 
     }
-    onUploadFail(err, index) {
+    // onUploadFail(err, index) {
 
-    }
+    // }
     onUpload(progress, index) { }
     onFullUpload(fileId) {
 
