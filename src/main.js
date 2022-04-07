@@ -45,7 +45,7 @@ export default class ChunkUploadFile {
         // 去除已经存在的
         if (savedChunkIds && savedChunkIds.length > 0) {
             savedChunkIds.map(i => {
-                if (!(this.sucIds[i] === undefined || this.sucIds[i] === null)) {
+                if (this.sucIds[i] === undefined || this.sucIds[i] === null) {
                     this.sucIds[i] = i
                 }
             })
