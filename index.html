@@ -6,7 +6,70 @@
     <title>Document</title>
 </head>
 <body>
-
+    <button id="import">选择文件</button>
+    <button id="pause">暂停</button>
+    <button id="con">继续</button>
+    <button id="des">销毁</button>
 </body>
-<script src="./lib/bundle.browser.js"></script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="./dist/bundle.browser.js"></script>
+<script>
+    $('#import').click(() => {
+        const cuf = new ChunkUploadFile({
+            size: 10240
+        })
+        cuf.readFile()
+        cuf.onFileReadEnd = function (file, fileId) {
+            const formdata = new FormData
+            formdata.append('md5', fileId)
+            console.log('file', file);
+            // first request
+            setTimeout(() => {
+                cuf.sendFile({
+                    customReq: function (file, next) {
+                        console.log('单独的切片文件-》', file);
+                        file.chunks = file.chunkLength
+                        file.chunk = file.chunkId
+                        file.chunkSize = cuf.chunkSize
+                        const data = cuf.packgeChunk(file)
+                        file = null
+                        // upload request
+                        setTimeout(() => {
+                            next()
+                        }, 1000);
+                    },savedChunkIds:[1,'2']
+                })
+            }, 1000);
+
+
+        }
+        cuf.hashProgress = function (r) {
+            console.log('文件转哈希进度==>', r);
+        }
+        // 钩子函数
+
+        cuf.onUpload = function (res, index) {
+            console.log(res, index);
+        }
+        cuf.onPaused = function () {
+            console.log('暂停了');
+        }
+        cuf.onContinue = function () {
+            console.log('继续了');
+        }
+        cuf.onFullUpload = function (fileId) {
+            console.log('全部传送完毕');
+        }
+
+        $('#pause').click(() => {
+            cuf.pauseUpload()
+        })
+        $('#con').click(() => {
+            cuf.continueUpload()
+        })
+        $('#des').click(() => {
+            cuf.destroy()
+        })
+    })
+</script>
 </html>

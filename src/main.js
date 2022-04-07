@@ -1,5 +1,16 @@
 
 import { checkSize, checkMode, calculateHash } from './until';
+import {
+    READY,
+    PARSE,
+    UPLOAD,
+    PAUSED,
+    FINISH,
+    DESTROY,
+    FAIL,
+    PARALLEL,
+    SERIAL
+} from './const'
 export default class ChunkUploadFile {
     // 初始化传入size,mode
     constructor({ size, mode } = {}) {
@@ -16,14 +27,21 @@ export default class ChunkUploadFile {
         this.errIds = {}//上传错误的下标
         this.sucIds = {}//上传成功的下标
         this.paused = false//暂停flag
-        this.mode = checkMode(mode) ? mode : 'serial'// 并行:parallel，串行：serial
+        this.mode = checkMode(mode) ? mode : SERIAL// 并行:parallel，串行：serial
         this.customReq = null //用于缓存用户的自定义上传请求
+        this.state = READY//状态 ready parse upload paused finish destroy fail
     }
     // 获取文件
     async readFile() {
+        if(this.state === DESTROY){
+            console.error('js-chunk-file-upload实例已经被销毁');
+            return false
+        }
         // 重置数据
         this.resetData()
         this.file = await this.showFileWindow()
+        // 改变状态
+        this.state = PARSE
         // 设置值
         const { name, type, size } = this.file
         this.fileName = name
@@ -38,7 +56,11 @@ export default class ChunkUploadFile {
     }
     // 切片上传文件
     async sendFile({ customReq, savedChunkIds }) {
-
+        if(this.state === DESTROY){
+            console.error('js-chunk-file-upload实例已经被销毁');
+            return false
+        }
+        this.state = UPLOAD
         if (customReq) {
             this.customReq = customReq
         }
@@ -98,7 +120,6 @@ export default class ChunkUploadFile {
             const next = () => {
                 that.sucIds[_data.chunkId] = _data.chunkId
                 let sucLen = Object.keys(that.sucIds).length
-
                 let precent = (sucLen / that.chunkLength).toFixed(3)
                 that.onUpload(precent, _data.chunkId)
                 // 回收_data
@@ -113,8 +134,11 @@ export default class ChunkUploadFile {
     // 上传分片
     async uploadChunks(fileList, customReq) {
         if (customReq) {
-            if (this.mode === 'serial') {
+            if (this.mode === SERIAL) {
                 for (let index = 0; index < fileList.length; index++) {
+                    if(this.state === DESTROY){
+                        return false
+                    }
                     const file = fileList[index];
                     if (!(this.sucIds[file.chunkId] === undefined || this.sucIds[file.chunkId] === null)) {
                         continue
@@ -125,6 +149,7 @@ export default class ChunkUploadFile {
                     await this._packReq(file.chunkId, file, customReq)
 
                 }
+                this.state = FINISH
                 this.onFullUpload(this.fileId)
             } else {
                 const reqList = []
@@ -136,11 +161,12 @@ export default class ChunkUploadFile {
                     }
                 })
                 Promise.all(reqList).then(() => {
+                    this.state = FINISH
                     this.onFullUpload(this.fileId)
                 })
                     .catch((err) => {
-                        if (err !== 'paused') {
-
+                        if (err !== PAUSED) {
+                            this.state = PAUSED
                         }
                     })
             }
@@ -161,8 +187,13 @@ export default class ChunkUploadFile {
     }
     // 暂停上传
     pauseUpload() {
-        if (this.mode === 'serial') {
+        if(this.state === DESTROY){
+            console.error('js-chunk-file-upload实例已经被销毁');
+            return false
+        }
+        if (this.mode === SERIAL) {
             this.paused = true
+            this.state = PAUSED
             this.onPaused()
         } else {
             console.error('并行模式不能使用暂停功能')
@@ -170,25 +201,36 @@ export default class ChunkUploadFile {
     }
     // 继续上传
     continueUpload() {
-        if (this.mode === 'serial') {
+        if(this.state === DESTROY){
+            console.error('js-chunk-file-upload实例已经被销毁');
+            return false
+        }
+        if (this.mode === SERIAL) {
             this.paused = false
+            this.state=UPLOAD
             this.sendFile({ fileId: this.fileId, customReq: this.customReq })
             this.onContinue()
         } else {
             console.error('并行模式不能使用暂停功能')
         }
     }
+    destroy() {
+        this.state = DESTROY
+        this.onDestroy()
+    }
+    restart(){
+        this.resetData()
+        this.onRestart()
+    }
     // 钩子函数
     onFileReadEnd(file, fileId) {
 
     }
-    // onUploadFail(err, index) {
-
-    // }
     onUpload(progress, index) { }
     onFullUpload(fileId) {
-
     }
+    onDestroy() { }
+    onRestart() { }
     onPaused() { }
     onContinue() { }
     resetData() {
@@ -204,5 +246,6 @@ export default class ChunkUploadFile {
         this.sucIds = {}//上传成功的下标
         this.paused = false//暂停flag
         this.customReq = null //用于缓存用户的自定义上传请求
+        this.state=READY
     }
 }

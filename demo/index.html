@@ -11,6 +11,8 @@
     <button id="import">选择文件</button>
     <button id="pause">暂停</button>
     <button id="con">继续</button>
+    <button id="des">销毁</button>
+    <button id="res">重置</button>
 </body>
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 <script src="./bundle.browser.js"></script>
@@ -61,12 +63,23 @@
         cuf.onFullUpload = function (fileId) {
             console.log('全部传送完毕');
         }
-
+        cuf.onDestroy = function () {
+            console.log('销毁');
+        }
+        cuf.onRestart = function () {
+            console.log('重置');
+        }
         $('#pause').click(() => {
             cuf.pauseUpload()
         })
         $('#con').click(() => {
             cuf.continueUpload()
+        })
+        $('#des').click(() => {
+            cuf.destroy()
+        })
+        $('#res').click(()=>{
+            cuf.restart()
         })
     })
 </script>

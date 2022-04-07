@@ -67,7 +67,7 @@ export const  calculateHash = (file, progressFn)=> {
             spark.append(e.target.result);                   // Append array buffer
             currentChunk++;
             // 计算进度
-            progress = currentChunk / chunks.toFixed(3)
+            progress = (currentChunk / chunks).toFixed(3)
             if (progressFn && typeof progressFn === 'function') {
                 progressFn(progress)
             }

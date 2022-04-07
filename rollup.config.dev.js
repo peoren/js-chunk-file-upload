@@ -42,7 +42,7 @@ export default [
 				open:true,
 				port:8805,
 				// 静态资源
-				contentBase: [resolveFile('dist')],
+				contentBase: [''],
 			}),
 			!isDev && terser()
 		],

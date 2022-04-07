@@ -87,6 +87,8 @@ $ npm i js-chunk-file-upload
         cuf.continueUpload()
         // 将单个file包装成formData
         cuf.packgeChunk()
+        // 销毁生命周期
+        
 
 ```
 
