@@ -80,7 +80,14 @@ $ npm i js-chunk-file-upload
         cuf.onFullUpload = function (fileId) {
             console.log('全部传送完毕');
         }
-        
+        // 监听销毁
+        cuf.onDestroy = function () {
+            
+        }
+        // 监听重置
+        cuf.onRestart = function () {
+            
+        }
         // 暂停方法
         cuf.pauseUpload()
         // 继续方法
@@ -88,7 +95,9 @@ $ npm i js-chunk-file-upload
         // 将单个file包装成formData
         cuf.packgeChunk()
         // 销毁生命周期
-        
+        cuf.destroy()
+        // 重置
+        cuf.restart()
 
 ```
 
@@ -116,6 +125,24 @@ demo目录内有简单的示例代码
 
 MIT
 
+## 实例上的参数
+>（请勿随意修改，只读，修改参数请通过接口修改）
+
+| 参数名称        | 含义                                          |
+| --------------- | -------------------------------------------- |
+| state      | 生命周期（ready parse upload paused finish destroy fail）                         |
+| chunkSize      | 分片大小                         |
+| fileId      | 文件hash值                         |
+| hashProgress      | 计算hash回调函数                         |
+| fileChunkList      | 切片后的文件                         |
+| file      | 文件                         |
+| fileSize      | 文件名称                         |
+| chunkLength      | 分片数量                         |
+| paused      | 暂停                         |
+| mode      | 模式（并行:parallel，串行：serial）                         |
+| customReq      | 自定义请求                      |
+
+
 ## 生命周期|钩子函数
 
 | 方法名称        | 参数                                                  | 功能           |
@@ -126,6 +153,8 @@ MIT
 | onFullUpload     | fileId                                                   | 全部上传完成       |
 | onPaused |    无                                                 | 暂停后       |
 | onContinue |    无                                                 | 继续后       |
+| onDestroy |    无                                                 | 销毁后       |
+| onRestart |    无                                                 | 重置后       |
 
 ## 方法
 
@@ -136,6 +165,8 @@ MIT
 | sendFile        | {customReq:function,savedChunkIds:Array}, customReq:funtion(file:File, next:function){}自自定义是上传函数，必穿，传入file:单个切片文件，next完成上传后调用。savedChunkIds：可选，chunkId数组      |
 | continueUpload         | 续传                                                 |
 | pauseUpload             | 暂停                                                 |
+| destroy             | 销毁当前实例（若要彻底销毁请将实例赋值null）             |
+| restart             | 重置当前实例                                                 |
 
 ## 联系我
 hjw_ready@163.com
