@@ -16,7 +16,8 @@
 <script>
     $('#import').click(() => {
         const cuf = new ChunkUploadFile({
-            size: 10240
+            size: 10240,
+            accept:['.zip','.png']
         })
         cuf.readFile()
         cuf.onFileReadEnd = function (file, fileId) {

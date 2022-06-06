@@ -13,8 +13,9 @@ import {
 } from './const'
 export default class ChunkUploadFile {
     // 初始化传入size,mode
-    constructor({ size, mode } = {}) {
+    constructor({ size, mode,accept=[] } = {}) {
         this.chunkSize = checkSize(size) ? size : 1 * 1024 * 1024
+        this.accept =(accept&& accept.length>0)?accept.join(','):''
         this.fileId = ''//文件hash值
         this.hashProgress = function () { }//计算hash的进度函数
         // this.uploadProgress = function () { }//上传的进度函数
@@ -39,7 +40,7 @@ export default class ChunkUploadFile {
         }
         // 重置数据
         this.resetData()
-        this.file = await this.showFileWindow()
+        this.file = await this.showFileWindow(this.needType)
         // 改变状态
         this.state = PARSE
         // 设置值
@@ -80,7 +81,11 @@ export default class ChunkUploadFile {
             /* 在内存中创建一个input对象（无需注入DOM） */
             const input = document.createElement('input')
             /* 改为文件模式 */
-            input.type = 'file'
+            input.type ='file'
+            /*加入接受文件格式*/ 
+            if(this.accept){
+                input.accept = this.accept
+            }
             /* 多选模式 */
             input.multiple = true
             /* 定义文件选择监听 */
@@ -135,6 +140,7 @@ export default class ChunkUploadFile {
     async uploadChunks(fileList, customReq) {
         if (customReq) {
             if (this.mode === SERIAL) {
+                
                 for (let index = 0; index < fileList.length; index++) {
                     if(this.state === DESTROY){
                         return false
