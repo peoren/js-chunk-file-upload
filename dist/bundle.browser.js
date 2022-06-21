@@ -3658,7 +3658,7 @@
 
 	        input.onchange = function (e) {
 	          /* 初始化文件容器 */
-	          var Files = Array.from(e.path[0].files);
+	          var Files = Array.from(e.target.files);
 	          resolve(Files[0]);
 	        };
 

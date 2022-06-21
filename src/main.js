@@ -91,7 +91,7 @@ export default class ChunkUploadFile {
             /* 定义文件选择监听 */
             input.onchange = function (e) {
                 /* 初始化文件容器 */
-                const Files = Array.from(e.path[0].files)
+                const Files = Array.from(e.target.files)
                 resolve(Files[0])
             }
             input.click()
