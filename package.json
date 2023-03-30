@@ -1,5 +1,5 @@
 {
-  "name": "js-chunk-file-upload",
+  "name": "@tmesoft/js-chunk-file-upload",
   "version": "0.0.10",
   "description": "big file chunk and upload,you can custom request ",
   "keywords": [
